@@ -17,6 +17,10 @@ gcloud config set project {{project-id}}
 ### Enable Api's
 
 ```` bash
+gcloud services enable cloudbuild.googleapis.com
+````
+
+```` bash
 gcloud services enable cloudfunctions.googleapis.com
 ````
 
