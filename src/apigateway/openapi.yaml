@@ -1,0 +1,70 @@
+# openapi2-functions.yaml
+swagger: '2.0'
+info:
+  title: API_ID optional-string
+  description: Sample API on API Gateway with a Google Cloud Functions backend
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /investecPay:
+    post:
+      summary: Make an Investec payment
+      operationId: investecPay
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Payment that needs to be made"
+        required: true
+        schema:
+          $ref: "#/definitions/Payment"
+      x-google-backend:
+        address: https://us-central1-investec-oracle.cloudfunctions.net/investecPay
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+definitions:
+    Payment:
+        type: "object"
+        required:
+        - "username"
+        - "password"
+        - "bank"
+        - "accountType"
+        - "benificiaryName"
+        - "accountNumber"
+        - "description"
+        - "reference"
+        - "amount"
+        properties:
+            username:
+                type: "string"
+                example: "87154488878"
+            password:
+                type: "string"
+                example: "SDDA%S&DN*"
+            bank:
+                type: "string"
+                example: "FIRST NATIONAL BANK"
+            accountType:
+                type: "string"
+                example: "Cheque"
+            benificiaryName:
+                type: "string"
+                example: "Jhonny"
+            accountNumber:
+                type: "string"
+                example: "3254335"
+            description:
+                type: "string"
+                example: "My description"
+            reference:
+                type: "string"
+                example: "Benificiary reference"
+            amount:
+                type: "number" 
+                example: "1.95"
