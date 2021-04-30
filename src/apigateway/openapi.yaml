@@ -22,6 +22,7 @@ paths:
           $ref: "#/definitions/Payment"
       x-google-backend:
         address: https://us-central1-investec-oracle.cloudfunctions.net/investecPay
+        deadline: 60
       responses:
         '200':
           description: A successful response

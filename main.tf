@@ -5,7 +5,7 @@ provider "google-beta" {
 
 provider "google" {
   project = var.project
-  version = "~> 3.65"
+  version = "~> 3.48.0"
 }
 
 resource "google_storage_bucket" "bucket" {
@@ -49,6 +49,13 @@ resource "google_api_gateway_api_config" "api_gw" {
       contents = filebase64("./src/apigateway/openapi.yaml")
     }
   }
+
+  gateway_config {
+    backend_config {
+	  google_service_account = "${var.project}@appspot.gserviceaccount.com"
+    }
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -58,10 +65,11 @@ resource "google_api_gateway_gateway" "api_gw" {
   provider = google-beta
   api_config = google_api_gateway_api_config.api_gw.id
   gateway_id = "api-gw"
+  region     = "us-central1"
 }
 
 # IAM entry for a single user to invoke the function
-resource "google_cloudfunctions_function_iam_member" "publish_invoker" {
+resource "google_cloudfunctions_function_iam_member" "investec_invoker" {
   project        = google_cloudfunctions_function.investecPay_function.project
   region         = google_cloudfunctions_function.investecPay_function.region
   cloud_function = google_cloudfunctions_function.investecPay_function.name
@@ -70,14 +78,5 @@ resource "google_cloudfunctions_function_iam_member" "publish_invoker" {
   member = "serviceAccount:${var.project}@appspot.gserviceaccount.com"
 }
 
-# IAM entry for a single user to invoke the function
-resource "google_cloudfunctions_function_iam_member" "token_invoker" {
-  project        = google_cloudfunctions_function.investecPay_function.project
-  region         = google_cloudfunctions_function.investecPay_function.region
-  cloud_function = google_cloudfunctions_function.investecPay_function.name
-
-  role   = "roles/cloudfunctions.invoker"
-  member = "allUsers"
-}
 
 
