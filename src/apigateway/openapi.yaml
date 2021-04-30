@@ -23,6 +23,8 @@ paths:
       x-google-backend:
         address: https://us-central1-investec-oracle.cloudfunctions.net/investecPay
         deadline: 60
+      security:
+        - api_key: []
       responses:
         '200':
           description: A successful response
@@ -69,3 +71,9 @@ definitions:
             amount:
                 type: "number" 
                 example: "1.95"
+securityDefinitions:
+    # This section configures basic authentication with an API key.
+    api_key:
+      type: "apiKey"
+      name: "key"
+      in: "query"
