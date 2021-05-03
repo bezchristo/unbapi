@@ -45,9 +45,3 @@ terraform init
 ``` bash
 terraform apply -var project="{{project-id}}"
 ```
-
-### Enable API key support for your service
-
-``` bash
-gcloud services enable api-gw-3as4qnv4uzjwp.apigateway.unbapi.cloud.goog
-```

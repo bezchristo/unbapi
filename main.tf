@@ -36,12 +36,14 @@ resource "google_cloudfunctions_function" "investecPay_function" {
 resource "google_api_gateway_api" "api_gw" {
   provider = google-beta
   api_id = "api-gw"
+  display_name = "UNBAPI API"
 }
 
 resource "google_api_gateway_api_config" "api_gw" {
   provider = google-beta
   api = google_api_gateway_api.api_gw.api_id
   api_config_id = "config"
+  display_name = "UNBAPI API Config"
 
   openapi_documents {
     document {
@@ -66,6 +68,7 @@ resource "google_api_gateway_gateway" "api_gw" {
   api_config = google_api_gateway_api_config.api_gw.id
   gateway_id = "api-gw"
   region     = "us-central1"
+  display_name = "UNBAPI Gateway"
 }
 
 # IAM entry for a single user to invoke the function
