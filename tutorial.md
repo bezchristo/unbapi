@@ -14,28 +14,6 @@
 gcloud config set project {{project-id}}
 ```
 
-### Enable Api's
-
-```` bash
-gcloud services enable apigateway.googleapis.com
-````
-
-```` bash
-gcloud services enable servicemanagement.googleapis.com
-````
-
-```` bash
-gcloud services enable servicecontrol.googleapis.com
-````
-
-```` bash
-gcloud services enable cloudbuild.googleapis.com
-````
-
-```` bash
-gcloud services enable cloudfunctions.googleapis.com
-````
-
 ### Apply terraform file and variables
 
 ``` bash

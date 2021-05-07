@@ -1,3 +1,4 @@
+# Set providers (Need to use beta for Gateway)
 provider "google-beta" {
   project = var.project
   version = "~> 3.48.0"
@@ -8,10 +9,36 @@ provider "google" {
   version = "~> 3.48.0"
 }
 
+
+# Enable the required API's
+variable "gcp_service_list" {
+  description ="The list of apis necessary for the project"
+  type = list(string)
+  default = [
+	  "apigateway.googleapis.com",
+	  "servicemanagement.googleapis.com",
+	  "servicecontrol.googleapis.com",
+	  "cloudbuild.googleapis.com", 
+	  "cloudfunctions.googleapis.com"
+  ]
+}
+
+resource "google_project_service" "gcp_services" {
+  for_each = toset(var.gcp_service_list)
+  project = var.project
+  service = each.key
+  
+  disable_dependent_services = true
+}
+
+
+# Create source code bucket
 resource "google_storage_bucket" "bucket" {
   name = "unbapi_source_code"
 }
 
+
+# Investec
 resource "google_storage_bucket_object" "investecPay_code" {
   name   = "investecPay.zip"
   bucket = google_storage_bucket.bucket.name
@@ -33,6 +60,8 @@ resource "google_cloudfunctions_function" "investecPay_function" {
   region                = "us-central1"
 }
 
+
+# Create the Gateway
 resource "google_api_gateway_api" "api_gw" {
   provider = google-beta
   api_id = "api-gw"
@@ -71,7 +100,8 @@ resource "google_api_gateway_gateway" "api_gw" {
   display_name = "UNBAPI Gateway"
 }
 
-# IAM entry for a single user to invoke the function
+
+# IAM entry for a service account to invoke the function
 resource "google_cloudfunctions_function_iam_member" "investec_invoker" {
   project        = google_cloudfunctions_function.investecPay_function.project
   region         = google_cloudfunctions_function.investecPay_function.region
@@ -80,6 +110,3 @@ resource "google_cloudfunctions_function_iam_member" "investec_invoker" {
   role   = "roles/cloudfunctions.invoker"
   member = "serviceAccount:${var.project}@appspot.gserviceaccount.com"
 }
-
-
-
