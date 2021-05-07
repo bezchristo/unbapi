@@ -11,18 +11,6 @@ provider "google" {
 
 
 # Enable the required API's
-variable "gcp_service_list" {
-  description ="The list of apis necessary for the project"
-  type = list(string)
-  default = [
-	  "apigateway.googleapis.com",
-	  "servicemanagement.googleapis.com",
-	  "servicecontrol.googleapis.com",
-	  "cloudbuild.googleapis.com", 
-	  "cloudfunctions.googleapis.com"
-  ]
-}
-
 resource "google_project_service" "gcp_services" {
   for_each = toset(var.gcp_service_list)
   project = var.project
