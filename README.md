@@ -1,4 +1,4 @@
-# UNBAPI (Unstable)
+# UNBAPI
 
 The following tutotial will set up an unofficial banking api service
 
