@@ -5,8 +5,7 @@
 ## Setup Project
 
 ### Create Project
-
-<walkthrough-project-billing-setup></walkthrough-project-billing-setup>
+<walkthrough-project-setup billing=true></walkthrough-project-setup>
 
 ### Set project as default
 
