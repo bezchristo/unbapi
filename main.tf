@@ -9,28 +9,25 @@ provider "google" {
   version = "~> 3.48.0"
 }
 
-
 # Enable the required API's
 resource "google_project_service" "gcp_services" {
   for_each = toset(var.gcp_service_list)
-  project = var.project
-  service = each.key
-  
+  project  = var.project
+  service  = each.key
+
   disable_dependent_services = true
 }
-
 
 # Create source code bucket
 resource "google_storage_bucket" "bucket" {
   name = "unbapi_source_code"
 }
 
-
 # Investec
 resource "google_storage_bucket_object" "investecPay_code" {
   name   = "investecPay.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./src/functions/investecPay/"
+  source = "./src/functions/investecPay/investecPay.zip"
 }
 
 resource "google_cloudfunctions_function" "investecPay_function" {
@@ -48,30 +45,29 @@ resource "google_cloudfunctions_function" "investecPay_function" {
   region                = "us-central1"
 }
 
-
 # Create the Gateway
 resource "google_api_gateway_api" "api_gw" {
-  provider = google-beta
-  api_id = "api-gw"
+  provider     = google-beta
+  api_id       = "api-gw"
   display_name = "UNBAPI API"
 }
 
 resource "google_api_gateway_api_config" "api_gw" {
-  provider = google-beta
-  api = google_api_gateway_api.api_gw.api_id
+  provider      = google-beta
+  api           = google_api_gateway_api.api_gw.api_id
   api_config_id = "config"
-  display_name = "UNBAPI API Config"
+  display_name  = "UNBAPI API Config"
 
   openapi_documents {
     document {
-      path = "spec.yaml"
+      path     = "spec.yaml"
       contents = filebase64("./src/apigateway/openapi.yaml")
     }
   }
 
   gateway_config {
     backend_config {
-	  google_service_account = "${var.project}@appspot.gserviceaccount.com"
+      google_service_account = "${var.project}@appspot.gserviceaccount.com"
     }
   }
 
@@ -81,13 +77,12 @@ resource "google_api_gateway_api_config" "api_gw" {
 }
 
 resource "google_api_gateway_gateway" "api_gw" {
-  provider = google-beta
-  api_config = google_api_gateway_api_config.api_gw.id
-  gateway_id = "api-gw"
-  region     = "us-central1"
+  provider     = google-beta
+  api_config   = google_api_gateway_api_config.api_gw.id
+  gateway_id   = "api-gw"
+  region       = "us-central1"
   display_name = "UNBAPI Gateway"
 }
-
 
 # IAM entry for a service account to invoke the function
 resource "google_cloudfunctions_function_iam_member" "investec_invoker" {
