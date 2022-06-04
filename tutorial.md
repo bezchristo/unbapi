@@ -10,7 +10,7 @@
 ### Set project as default
 
 ``` bash
-gcloud config set project {{project-id}}
+gcloud config set project <walkthrough-project-id/>
 ```
 
 ### Apply terraform file and variables
@@ -20,5 +20,5 @@ terraform init
 ```
 
 ``` bash
-terraform apply -var project="{{project-id}}"
+terraform apply -var project="<walkthrough-project-id/>"
 ```
