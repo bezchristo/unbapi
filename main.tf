@@ -30,7 +30,7 @@ resource "google_storage_bucket" "bucket" {
 resource "google_storage_bucket_object" "investecPay_code" {
   name   = "investecPay.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./src/functions/investecPay/investecPay.zip"
+  source = "./src/functions/investecPay/"
 }
 
 resource "google_cloudfunctions_function" "investecPay_function" {
